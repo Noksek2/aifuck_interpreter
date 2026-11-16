@@ -32,7 +32,7 @@
 5. Just because one abstraction tool appeared, does that make foundational knowledge useless?
 6. Why should we have to sacrifice everything to “social productivity”? If productivity is all that matters, learning itself is inefficient—so why are learning and academic programs, which are also inefficient metrics, considered necessary?
 7. Why are we expected to ignore obvious present inefficiencies and instead join the panic over far-future AI technology?
-8. This is still engineering. Even with “trivial” code, a small runtime mistake or design flaw has real consequences.
+8. Although this is a field of engineering and even trivial code can fail due to a small operational mistake or design flaw, if you see this as just code monkeying, then you know nothing about this area.
 9. Professors, experts—whoever you are in computer engineering—wake up. If code-level skill is supposedly useless, then how do you explain the fact that right now, without even boilerplate-level AI code, nothing works at all?
 10. Why do opinions spread only when people are desperate and furious? Am I supposed to be an agitator? Does the world want another Hitler?
 11. I’m tired. Even if I stop speaking up, I hope people in engineering will defend against this nonsense. Not just by “voluntarily using less AI slop” or mild criticism—that’s nowhere near enough. We need concrete means to defend both specialists and beginners.
