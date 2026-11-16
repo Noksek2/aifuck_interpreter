@@ -12,7 +12,7 @@
 9. 컴퓨터 공학의 교수든 전문가든 누가 되든 정신차려라. 자신의 오랜 전공에 있어서 코드 수준이 쓸모가 없다고 하면서 지금 누구보다도 당장 그 하찮은 보일러플레이트 수준의 ai 코드도 없으면 아무 동작도 못하는 현상은 무엇으로 설명하나?
 10. 왜 항상 발악하고 분노할 때나 되어서야 의견이 전파되냐? 내가 선동가인가? 세상이 히틀러를 원하나?
 11. 이제 지겹고 내가 굳이 나서지 않아도 그런 헛소리에서 좀 방어하는 인간이 공학에서 나오기를 바란다. 단지 자발적으로 ai  slop이든 ai 코드를 덜 쓰거나, 비판하는 수준은 어림도 없고, 전적으로 전공자든 코드 초보자를 방어해야 하는 수단이 필요하다. 
-선동하는 것도 아니며 당연히 개발자가 ai 시대에 일어날 일에 대해 대비했어야 하며 행동했어야 하는 일들이다, 이를 게을리 한건 당장 눈 앞에만 보이는 자동화나 ai 기술에만 목 매이거나 생산성 및 돈이라는 지표에 메달린 개발자나 집단적인 ai 불안증에 동참하는 그 전문가들 자신에게 있다. ai 시대에 살아남았다고 자랑할게 아니라 이는 부끄러워 할 일이고 수치스러워 할 공학자로써의 치부이다.
+선동하는 것도 아니며 당연히 개발자가 ai 시대에 일어날 일에 대해 대비했어야 하며 행동했어야 하는 일들이다, 이를 게을리 한건 당장 눈 앞에만 보이는 자동화나 ai 기술에만 목 매이거나 생산성 및 돈이라는 지표에 메달린 개발자나 집단적인 ai 불안증에 동참하는 그 전문가들 자신에게 있다. 이런 비정상적인 환경에서, 초보자들은 도태시키고 혼자 경쟁에서 살아남는 현상은, 자랑할게 아니라 이는 부끄러워 할 일이고 수치스러워 할 공학자로써의 치부이다.
 
 경고한다. 단순하게 내 실력이 초라한건 참을 수 있다, 그러나 그 이상의 경험이나 경력에 대한 멸시는 필요없다. 
 난 최소한 10년 간은 프로그래밍을 목숨처럼 배워왔고, 단순하게 결과물이 없고 생산성이 낮다고 폄하받을 이유는 어디에도 없다.
@@ -37,7 +37,10 @@
 10. Why do opinions spread only when people are desperate and furious? Am I supposed to be an agitator? Does the world want another Hitler?
 11. I’m tired. Even if I stop speaking up, I hope people in engineering will defend against this nonsense. Not just by “voluntarily using less AI slop” or mild criticism—that’s nowhere near enough. We need concrete means to defend both specialists and beginners.
 
-This is not agitation. Developers should have prepared and acted for what the AI era would bring. Failing to do so is the fault of developers and experts who fixated on automation, AI hype, productivity, and money, or who joined collective AI anxiety. Surviving in the AI era is nothing to brag about—it is something engineering should be ashamed of.
+This is not agitation. Developers should have prepared and acted for what the AI era would bring. Failing to do so is the fault of developers and experts who fixated on automation, AI hype, productivity, and money, or who joined collective AI anxiety. 
+
+In such an abnormal environment, the phenomenon of discarding beginners and surviving in competition alone is not something to be proud of, but rather a shameful and disgraceful flaw for engineers.
+
 
 Let me be clear: I can tolerate being unskilled, but I don't need any contempt for my experience or career.
 I have spent at least ten years learning programming as if it were my life, and there is no reason for it to be dismissed simply as lacking deliverables or low productivity.
