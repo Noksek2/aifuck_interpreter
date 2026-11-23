@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-const int AIFUCK_MAX_FILE = 1024 * 1024;
-const int AIFUCK_HEAVY_FILE = 1024 * 16;
+
+#define AIFUCK_MAX_FILE  (1024 * 1024)
+#define AIFUCK_HEAVY_FILE  (1024 * 16)
+#define AIFUCK_MAX_JMPMAP (256) //~64KB
+#define AIFUCK_MAX_JMPST  (256)
 
 typedef enum aifuck_t{
 	_err,
@@ -17,12 +20,18 @@ typedef enum aifuck_t{
 	_arr_e, //doom ]
 	_comment,
 	_eof,
+	
+	vm_incn,//inc 1010
+	vm_decn,//dec 1010
+	vm_ujmp,//
+	vm_jmp,//
 } aifuck_t;
 
-
+typedef unsigned char uchar_t;
+typedef unsigned int uint_t;
 typedef struct AFfilebuf{
 	char* source;
-	char* runcode;
+	uchar_t* runcode;
 	size_t len;
 	size_t rlen;
 } AFfilebuf;
@@ -40,6 +49,11 @@ static aifuck_t g_smap[128]={
 	[']'] = _arr_e,
 	['#'] = _comment,
 };
+uint_t g_jmpmap[AIFUCK_MAX_JMPMAP][2];//end , start
+uint_t g_jmpid = 0;
+const int JMPEND = 0;
+const int JMPSTART = 1;
+
 aifuck_t aifuck_findmap(const char* key, size_t keylen){
 	switch(keylen){
 	case 2:
@@ -75,16 +89,18 @@ aifuck_t aifuck_findmap(const char* key, size_t keylen){
 }
 const char* aifuck_tokey(aifuck_t t){
 	switch(t){	
-	case _gt: return ">";// agi >
-	case _lt: return "<";// asi <
-	case _add: return "+"; // llm + 
-	case _sub: return "-"; // decels -
-	case _dot: return "."; //hype .
-	case _com: return ","; //slop ,
+	case _gt: return "m_inc";// agi >
+	case _lt: return "m_dec";// asi <
+	case _add: return "inc"; // llm + 
+	case _sub: return "dec"; // decels -
+	case _dot: return "put"; //hype .
+	case _com: return "get"; //slop ,
 	case _arr: return "["; //singularity [
 	case _arr_e: return "]"; //doom ]
 	case _comment: return "#";
 	case _eof: return "eof";
+	case vm_jmp: return "vm_jmp";
+	case vm_ujmp: return "vm_ujmp";
 	}
 	return "err";
 }
@@ -149,87 +165,155 @@ aifuck_t aifuck_gettok(char** pch){
 }
 #undef GET
 #undef ch
-bool aifuck_parse(AFfilebuf fb){
-	//puts(fb.source);
-	const char* org = fb.source;
-	fb.runcode = (char*)calloc(fb.len, sizeof(char));
-	fb.rlen = 0;
-	if(fb.runcode == NULL) {
+bool aifuck_parse(AFfilebuf* fb){
+	//puts(fb->source);
+	int jmpst[AIFUCK_MAX_JMPST];
+	memset(jmpst, 0, sizeof(int) * AIFUCK_MAX_JMPST);
+	uint_t jmplen = 0;
+	
+	const char* org = fb->source;
+	fb->runcode = (uchar_t*)calloc(fb->len + AIFUCK_MAX_JMPST, sizeof(char));
+	printf("%llX>>\n", fb->runcode);
+	fb->rlen = 0;
+	if(fb->runcode == NULL) {
 		perror(">:( memory alloced failed. whats wrong with your RAM? \n");
 		return false;
 	}
 	aifuck_t tok;
-	while(tok = aifuck_gettok(&fb.source), tok!=_eof){
-		if(tok==_err){
+	while(tok = aifuck_gettok(&fb->source), tok!=_eof){
+		
+		switch(tok){
+		case _err:
 			printf("[token error]\n");
-			free(fb.runcode);
-			return false;
-		}
-		else if(tok==_comment){
+			goto l_err;
+		case _comment:
 			while(1){
-				switch(*fb.source){
+				switch(*fb->source){
 				case '\0': goto l_fin;
-				case '\n': fb.source++; goto l_redo;
-				default: fb.source++; break;
+				case '\n': fb->source++; goto l_redo;
+				default: fb->source++; break;
 				}
 			}
-		}
-		printf("tok type %d => %s\n", tok, aifuck_tokey(tok));
-		fb.runcode[fb.rlen++] = (char)tok;
+			break;
+		case _arr:
+			if(jmplen >= AIFUCK_MAX_JMPST){
+				goto l_err;
+			}
+			//ujmp
+			fb->runcode[fb->rlen++]=vm_ujmp;
+			fb->runcode[fb->rlen++]=g_jmpid;
+			g_jmpmap[g_jmpid][JMPSTART] = fb->rlen;//[[][]] 
+			fb->rlen++;
+			
+			
+			jmpst[jmplen++]=g_jmpid;			
+			g_jmpid++;
+			break;
+		case _arr_e:
+			if(jmplen == 0){
+				printf("[no '[' or 'singularity']\n");
+			}
+			const int id = jmpst[--jmplen];
+			fb->runcode[fb->rlen++]=vm_jmp;
+			fb->runcode[fb->rlen++]=id;
+			g_jmpmap[id][JMPEND] = fb->rlen;
+			break;
+		default:
+			if(fb->rlen<256){
+				printf("%s\t", aifuck_tokey(tok));
+			}
+			fb->runcode[fb->rlen++] = (uchar_t)tok;
+			break;
+		};
+		
 	l_redo: ;
 	}
 l_fin:
-	fb.runcode[fb.rlen++] = _eof;
-	fb.source = org;
-	puts("NON");
+	fb->runcode[fb->rlen++] = _eof;
+	fb->source = org;
 	return true;
+l_err:
+	free(fb->runcode);
+	fb->source = org;
+	return false;
+}
+void aifuck_dis_dump(AFfilebuf fb){
+	for(int i=0;i<fb.rlen;i++){
+		printf("%03d\t", i);
+		switch(fb.runcode[i]){
+		case vm_ujmp:{
+			const uchar_t id = fb.runcode[i+1];
+			printf("ujmp id=%d (%d)\n", id, g_jmpmap[id][JMPEND]);
+			i++;
+			break;
+		}
+		case vm_jmp:{
+			const uchar_t id = fb.runcode[i+1];
+			printf("jmp id=%d (%d)\n", id, g_jmpmap[id][JMPSTART]);
+			i++;
+			break;
+		}
+		default:
+			printf("%s\n", aifuck_tokey(fb.runcode[i]));
+		}
+	}
 }
 bool aifuck_run(AFfilebuf fb){
-	//const char* org_rcode = fb.runcode;
 	const int MAX_MEM = 256;
 	const int MAX_STACK = 256;
 	char mem[MAX_MEM];
-	int retpc[MAX_STACK];
 	int currmem = 0;
-	int retlen = 0;
 	memset(mem, 0, MAX_MEM * sizeof(char));
-	memset(retpc, 0, MAX_STACK * sizeof(int));
 	char* pc = fb.runcode;
+	
+	aifuck_dis_dump(fb);
+	
 	while(1){
-	switch(*pc){
-	case _gt:
-		currmem++;
-		if(currmem>=MAX_MEM){
-			printf("runtime error >:( max mem");
+		switch(*pc){
+		case _gt:
+			currmem++;
+			if(currmem>=MAX_MEM){
+				printf("runtime error >:( max mem");
+				goto l_err;
+			}
+		break;
+		case _lt:
+			currmem--;
+			if(currmem<0){
+				printf("runtime error >:( mem < 0");
+				goto l_err;
+			}
+			
+		break;
+		case _dot:
+			putchar(mem[currmem]);
+		break;
+		case _com:
+			mem[currmem] = getchar();
+		break;
+		case vm_ujmp:
+			pc++;
+			if(mem[currmem]==0){
+				pc = fb.runcode + g_jmpmap[*pc][0];
+				goto l_redo;
+			}
+			//[currmem]
+		break;
+		case vm_jmp:
+			pc++;
+			pc = fb.runcode + g_jmpmap[*(pc)][1];
+			goto l_redo;
+		case _eof:
 			goto l_fin;
 		}
-	break;
-	case _lt:
-		currmem--;
-		if(currmem<0){
-			printf("runtime error >:( mem < 0");
-			goto l_fin;
-		}
-		
-	break;
-	case _dot:
-		putchar(mem[currmem]);
-	break;
-	case _com:
-	break;
-	case _arr:
-		//[currmem]
-	break;
-	case _arr_e:
-	break;
-	case _eof:
-		goto l_fin;
-	}
-	pc++;
+		pc++;
+	l_redo: ;
 	}
 l_fin:
 	//fb.runcode = org_rcode;
 	return true;
+l_err:
+	return false;
 }
 int main(int argc, char** argv){
 	
@@ -244,19 +328,17 @@ int main(int argc, char** argv){
 	}
 	printf("filesize : %llu\n", fb.len);
 	
-	if(!aifuck_parse(fb)){
+	if(!aifuck_parse(&fb)){
 		perror(">:( your file is so wired to parse haha \n");
 		free(fb.source);
 		return 1;
 	}
-	//if(!aifuck_run(fb)){
-	//	return 1;
-	//}
-	puts("NON");
+	if(!aifuck_run(fb)){
+		puts("FAIL");
+	}
+	puts("SUCC");
 	free(fb.runcode);
-	puts("NON");
 	free(fb.source);
-	puts("NON");
 	return 0;
 }
 //fuck 
