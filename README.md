@@ -4,7 +4,26 @@
 chasing trends is awesome yeah 
 
 ```
-ai banzai comment
+ai banzai
+++++++++++
+++++++++++
+++++++++++
+++++++++++
+++++++++++
+++++++++++
+++++++++++
+++.
++.
+ai or
+llm llm llm llm llm llm llm llm llm llm
+llm llm llm llm llm llm llm llm llm llm
+llm llm llm llm llm llm llm llm llm llm
+llm llm llm llm llm llm llm llm llm llm
+llm llm llm llm llm llm llm llm llm llm
+llm llm llm llm llm llm llm llm llm llm
+llm llm llm llm llm llm llm llm llm llm
+llm llm hype
+llm hype
 ```
 so awesome that can't code. 
 
@@ -12,10 +31,15 @@ so awesome that can't code.
 ## brainfuck supports
 it supports brainfuck too.
 
-- `ai` : comment
+- `ai` : line comment
 - `agi`, `>` : inc mem
 - `asi`, `<` : dec mem
-- etc
+- `llm`, `+` : inc 
+- `decels`, `-` : dec
+- `hype`, `.` : put/output
+- `slop`, `,` : get/input
+- `singularity`, `[` : loop open
+- `doom`, `]` : loop close
 
 
 
