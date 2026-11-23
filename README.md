@@ -1,6 +1,6 @@
+# not finished
 
-
-# ai is awesome 
+## ai is awesome 
 chasing trends is awesome yeah 
 
 ```
@@ -41,9 +41,31 @@ it supports brainfuck too.
 - `singularity`, `[` : loop open
 - `doom`, `]` : loop close
 
+and you may use interger
+
+```
+llm 72
+hype 20
+```
+simple 
+
+or i dont support. when im tired
+## It use bytecode
+but not fast
+
+## how to run
+### flags
+- `-h` : help
+- `-o [filename]` : bytecode output in `filename`
+- `-d [filename]` : convert bytecode to aifuck, print in `filename`
+
+```
+```
 
 
- 
+## warning
+- `singularity`, `[` : loop count < 256
+- error message garbage
 <img width="512" alt="image" src="https://github.com/user-attachments/assets/388f54bc-f819-4617-833c-76244702d4bb" />
 
 
