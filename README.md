@@ -10,7 +10,7 @@ so awesome that can't code.
 
 
 ## brainfuck supports
-it supports brainfuck too. lol
+it supports brainfuck too.
 
 - `ai` : comment
 - `agi`, `>` : inc mem
